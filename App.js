@@ -1,14 +1,30 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import Welcome from './app/Welcome';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+  const slides = [
+    {
+      key: 1,
+      title: 'Welcome One',
+      desc: 'Welcome Screen One Description!',
+      backgroundColor: 'red'
+    },
+    {
+      key: 2,
+      title: 'Welcome Two',
+      desc: 'Welcome Screen Two Description!',
+      backgroundColor: 'blue'
+    },
+    {
+      key: 3,
+      title: 'Welcome Three',
+      desc: 'Welcome Screen Three Description!',
+      backgroundColor: 'green'
+    }
+  ];
+  return <Welcome slides={slides}/>
 }
 
 const styles = StyleSheet.create({
