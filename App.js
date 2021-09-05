@@ -24,7 +24,9 @@ export default function App() {
       backgroundColor: 'green'
     }
   ];
-  return <Welcome slides={slides}/>
+  return <>
+    <Welcome slides={slides} />
+  </>
 }
 
 const styles = StyleSheet.create({
