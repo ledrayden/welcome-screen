@@ -1,6 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import Welcome from './app/Welcome';
 
 export default function App() {
@@ -25,6 +24,7 @@ export default function App() {
     }
   ];
   return <>
+    <StatusBar hidden />
     <Welcome slides={slides} />
   </>
 }
