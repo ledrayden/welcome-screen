@@ -1,8 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import Welcome from './app/Welcome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
+  const [loading, setLoading] = useState(true);
+  const [isFirstTimeLoad, setIsFirstTimeLoad] = useState(false);
+
+  // AsyncStorage if this already loaded or not
+  // if yes render the actual app
+  // if not then we are going display this welcome screen.
+
+  const checkForFirstTimeLoaded = async () => {
+    const result = await AsyncStorage.getItem('isFirstTimeLoad')
+    if (result === null) setIsFirstTimeLoad(true);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    checkForFirstTimeLoaded();
+  }), [];
+
   const slides = [
     {
       key: 1,
@@ -23,10 +41,26 @@ export default function App() {
       backgroundColor: 'green'
     }
   ];
-  return <>
-    <StatusBar hidden />
-    <Welcome slides={slides} />
-  </>
+
+  const handleDone = () => {
+    setIsFirstTimeLoad(false);
+    AsyncStorage.setItem('isFirstTimeLoad', 'no');
+  };
+
+  if (loading) return null;
+
+  if (isFirstTimeLoad) return (
+    <>
+      <StatusBar hidden />
+      <Welcome onDone={handleDone} slides={slides} />
+    </>
+  )
+
+  if (!isFirstTimeLoad) return <View style={styles.container}>
+    <Text style={{ fontSize: 22, fontWeight: 'bold' }}>
+      Welcome  to The APP
+    </Text>
+  </View>
 }
 
 const styles = StyleSheet.create({

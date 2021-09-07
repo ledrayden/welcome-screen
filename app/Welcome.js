@@ -1,30 +1,53 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { StyleSheet, FlatList, Text, View, Dimensions } from 'react-native';
 import Indicators from './Indicators';
 import Slide from './Slide';
 
-const Welcome = ({slides = []}) => {
-  if(!slides || !slides.length) return null;
+const Welcome = ({ slides = [], onDone }) => {
+  if (!slides || !slides.length) return null;
+  const [currentSliderIndex, setCurrentSliderIndex] = useState(0);
+  const flatListRef = useRef();
+
+  const onViewableItemsChanged = useRef((item) => {
+    const index = item.viewableItems[0].index;
+    setCurrentSliderIndex(index);
+  });
+
+  const handleSkip = () => {
+    flatListRef.current.scrollToEnd({ animated : true });
+  }
+
+  const handleNext = () => {
+    if(currentSliderIndex >= slides.length -1) return;
+    flatListRef.current.scrollToIndex({ index: currentSliderIndex +1 });
+  }
 
   return (
     <>
       <FlatList
+        ref={flatListRef}
         horizontal
+        showsHorizontalScrollIndicator={false}
         pagingEnabled
         data={slides}
-        keyExtractor={(item) => item.key.toString()} 
-        renderItem={({item}) => <Slide item={item}/>} 
+        keyExtractor={(item) => item.key.toString()}
+        renderItem={({ item }) => <Slide item={item} />}
+        onViewableItemsChanged={onViewableItemsChanged.current}
       />
       <View style={styles.indicatorContainer}>
-        <Indicators indicatorCount={slides.length} />
+        <Indicators
+          currentSliderIndex={currentSliderIndex}
+          indicatorCount={slides.length} />
       </View>
-      <Text style={[styles.button, styles.leftButton]}>Skip</Text>
-      <Text style={[styles.button, styles.rightButton]}>Next</Text>
+      {currentSliderIndex < slides.length -1 && <Text onPress={handleSkip} style={[styles.button, styles.leftButton]}>Skip</Text>}
+      {currentSliderIndex < slides.length -1 ? <Text onPress=
+      {handleNext} style={[styles.button, styles.rightButton]}>Next</Text> :
+      <Text onPress={onDone} style={[styles.button, styles.rightButton]}>Done</Text>}
     </>
   )
 };
 
-const {width} = Dimensions.get('screen');
+const { width } = Dimensions.get('screen');
 const styles = StyleSheet.create({
   indicatorContainer: {
     position: 'absolute',

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-const Indicators = ({ indicatorCount }) => {
+const Indicators = ({ indicatorCount, currentSliderIndex }) => {
     if (!indicatorCount || typeof indicatorCount !== 'number') return null;
 
     let indicators = [];
@@ -10,8 +10,15 @@ const Indicators = ({ indicatorCount }) => {
     }
 
     return (
-        indicators.map(indicator => <View key={indicator.toString()} style={styles.indicator} />)
-    )
+        indicators.map((indicator, index) => (
+            <View
+                key={indicator.toString()}
+                style={[
+                    styles.indicator, index === currentSliderIndex ?  styles.selected : styles.unSelected
+                ]}
+            />
+        ))
+    );
 };
 
 const styles = StyleSheet.create({
@@ -21,6 +28,14 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 5,
         marginHorizontal: 5,
+    },
+    selected: {
+        backgroundColor: 'white',
+    },
+    unSelected: {
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        borderColor: 'white',
     }
 });
 
